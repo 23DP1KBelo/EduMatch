@@ -12,6 +12,10 @@ class StudyProgramController extends Controller {
             'field_id'=>'nullable|integer|exists:study_fields,id', 'degree_level'=>'nullable|string|max:100',
             'language'=>'nullable|string|max:100', 'max_tuition'=>'nullable|numeric|min:0',
             'scholarships'=>'nullable|boolean', 'page'=>'nullable|integer|min:1',
+            'include_field_ids' => 'nullable|array',
+            'include_field_ids.*' => 'integer|distinct|exists:study_fields,id',
+            'exclude_field_ids' => 'nullable|array',
+            'exclude_field_ids.*' => 'integer|distinct|exists:study_fields,id',
         ]);
         $query = StudyProgram::with(['university.city.country', 'studyFields']);
         if (filled($f['search'] ?? null)) {
@@ -23,10 +27,24 @@ class StudyProgramController extends Controller {
         if (!empty($f['city_id'])) $query->whereHas('university',fn($q)=>$q->where('city_id',$f['city_id']));
         if (!empty($f['university_id'])) $query->where('university_id',$f['university_id']);
         if (!empty($f['field_id'])) $query->whereHas('studyFields',fn($q)=>$q->where('study_fields.id',$f['field_id']));
+        // Include programs matching ANY selected study field.
+        if (!empty($f['include_field_ids'])) {
+            $query->whereHas('studyFields', function ($q) use ($f) {
+                $q->whereIn('study_fields.id', $f['include_field_ids']);
+            });
+        }
+
+        // Exclude programs matching ANY excluded study field.
+        if (!empty($f['exclude_field_ids'])) {
+            $query->whereDoesntHave('studyFields', function ($q) use ($f) {
+                $q->whereIn('study_fields.id', $f['exclude_field_ids']);
+            });
+        }
         if (filled($f['degree_level'] ?? null)) $query->where('degree_level',$f['degree_level']);
         if (filled($f['language'] ?? null)) $query->where('language',$f['language']);
         if (isset($f['max_tuition'])) $query->where('tuition_fees','<=',$f['max_tuition']);
         if (!empty($f['scholarships'])) $query->whereHas('scholarships');
+        
         return response()->json($query->orderBy('name')->paginate(12)->withQueryString());
     }
     public function show(StudyProgram $studyProgram) {

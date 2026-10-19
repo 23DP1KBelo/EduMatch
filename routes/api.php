@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\StudyProgramController;
 use App\Http\Controllers\Api\StudyFieldController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\FilterController;
+
+
 Route::get('/universities',[UniversityController::class,'index']);
 Route::get('/universities/{university}',[UniversityController::class,'show']);
 Route::get('/universities/{university}/programs',[UniversityController::class,'programs']);
