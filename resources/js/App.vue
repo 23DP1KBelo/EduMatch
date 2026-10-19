@@ -1,16 +1,16 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer" :temporary="mobile" width="270">
-      <div class="pa-5 d-flex align-center">
-        <v-avatar color="primary" rounded="lg" class="mr-3">
-          <v-icon icon="mdi-school" color="white" />
+    <v-navigation-drawer v-model="drawer" :temporary="mobile" width="270" class="brand-drawer">
+      <div class="pa-5 d-flex align-center brand-lockup">
+        <v-avatar color="white" rounded="lg" class="mr-3 brand-avatar">
+          <v-icon icon="mdi-school" color="primary" />
         </v-avatar>
         <div>
           <div class="text-h6 font-weight-bold">EduMatch</div>
-          <div class="text-caption text-medium-emphasis">Study discovery</div>
+          <div class="text-caption">A place to become</div>
         </div>
       </div>
-      <v-divider />
+      <div class="drawer-caption px-5 pt-5 pb-2">EXPLORE</div>
       <v-list nav density="comfortable">
         <v-list-item
           v-for="item in navItems"
@@ -27,11 +27,11 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar elevation="0" border="b" color="white">
+    <v-app-bar elevation="0" border="b" color="white" class="topbar">
       <v-app-bar-nav-icon @click="drawer = !drawer" />
-      <v-toolbar-title class="font-weight-bold">{{ pageTitle }}</v-toolbar-title>
+      <v-toolbar-title class="font-weight-bold topbar-title"><span class="topbar-kicker">EDUMATCH</span><span>{{ pageTitle }}</span></v-toolbar-title>
       <v-spacer />
-      <v-btn icon="mdi-refresh" variant="text" aria-label="Refresh page" @click="refreshPage" />
+      <v-btn icon="mdi-refresh" variant="text" aria-label="Refresh page" class="refresh-button" @click="refreshPage" />
     </v-app-bar>
 
     <v-main class="app-background">
@@ -45,28 +45,48 @@
 
         <!-- HOME -->
         <template v-if="page === 'home'">
-          <section class="hero-panel pa-6 pa-md-10 mb-7">
-            <v-chip color="white" variant="outlined" class="mb-4">YOUR FUTURE STARTS HERE</v-chip>
-            <h1 class="text-h3 text-md-h2 font-weight-bold mb-4">Find a study path that fits you.</h1>
-            <p class="text-body-1 hero-copy mb-7">Explore universities, compare study options, and discover the details that matter.</p>
-            <v-row>
-              <v-col cols="12" md="8">
+          <section class="hero-panel mb-7">
+            <div class="hero-copy-block">
+              <div class="eyebrow"><span></span> YOUR NEXT CHAPTER STARTS HERE</div>
+              <h1>Find a place<br>to <em>become.</em></h1>
+              <p class="hero-copy">Explore universities and study programmes that fit your ambition, your budget, and the life you want to build.</p>
+              <div class="hero-note"><span>✳</span> A clearer path to your future, one good match at a time.</div>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+              <div class="sun-disc"></div><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+              <div class="art-plant plant-left"><i></i><i></i><i></i><b></b></div>
+              <div class="art-plant plant-right"><i></i><i></i><i></i><b></b></div>
+              <div class="arch"><div class="arch-window"></div></div>
+              <div class="art-step step-back"></div><div class="art-step step-front"></div>
+              <div class="person"><div class="person-head"></div><div class="person-hair"></div><div class="person-body"></div><div class="person-arm"></div><div class="person-leg"></div><div class="book"></div></div>
+              <span class="spark spark-one">✳</span><span class="spark spark-two">✦</span><span class="floating-label">your future<br>looks good ↗</span>
+            </div>
+            <div class="hero-search-wrap">
+              <div class="hero-search-copy"><span>START WITH A SEARCH</span><small>Find the course that feels like yours.</small></div>
+              <v-row class="hero-search-row">
+                <v-col cols="12" md="12">
                 <v-text-field
                   v-model="homeSearch"
-                  placeholder="Search programs or universities"
+                  placeholder="Try ‘computer science’ or a university"
                   prepend-inner-icon="mdi-magnify"
                   variant="solo"
-                  rounded="lg"
+                  rounded="0"
                   hide-details
                   @keyup.enter="searchFromHome"
                 >
                   <template #append-inner>
-                    <v-btn color="primary" @click="searchFromHome">Search</v-btn>
+                    <v-btn color="primary" class="search-button" @click="searchFromHome">Find programmes <v-icon end>mdi-arrow-top-right</v-icon></v-btn>
                   </template>
                 </v-text-field>
               </v-col>
             </v-row>
+            </div>
+            <div class="hero-bottom"><span>MADE FOR YOUR NEXT MOVE</span><span>SCROLL TO EXPLORE <b>↓</b></span></div>
           </section>
+          <div class="home-section-heading">
+            <div><div class="eyebrow eyebrow-muted"><span></span> THE WORLD IS OPEN</div><h2>Find your <em>fit.</em></h2></div>
+            <p>Start with what matters to you. We’ll help you find the rest.</p>
+          </div>
           <v-row>
             <v-col v-for="card in homeCards" :key="card.key" cols="12" sm="6" lg="3">
               <v-card rounded="xl" border elevation="0" class="pa-5 h-100 clickable-card" @click="navigate(card.key)">
@@ -804,23 +824,184 @@ onMounted(async () => {
 </script>
 
 <style>
-:root { color-scheme: light; }
-body { margin: 0; background: #f6f8fc; }
-.app-background { background: #f6f8fc; min-height: 100vh; }
-.content-width { max-width: 1600px; margin: 0 auto; }
-.hero-panel {
-  color: white;
-  border-radius: 28px;
-  background: linear-gradient(125deg, #172e55 0%, #285ca5 65%, #4b8dc5 100%);
+:root {
+  color-scheme: light;
+  --em-forest: #214d3b;
+  --em-forest-dark: #183c2e;
+  --em-sage: #e9eee5;
+  --em-paper: #fbfaf7;
+  --em-ink: #253a30;
+  --em-muted: #758278;
+  --em-line: #e7e7de;
+  --em-clay: #cc7957;
 }
-.hero-copy { max-width: 640px; color: rgba(255,255,255,.84); }
-.page-intro { margin-bottom: 26px; }
-.university-banner { display: flex; align-items: center; min-height: 132px; padding: 24px; background: linear-gradient(135deg, #eaf1fc, #f7f9fe); }
-.program-art { min-height: 100px; background: #eef4fc; }
-.detail-banner { color: white; background: linear-gradient(125deg, #172e55, #346eb2); }
-.metric-label { color: #6b7280; font-size: .8rem; margin-bottom: 5px; }
+
+body { margin: 0; background: var(--em-paper); }
+.v-application { color: var(--em-ink); font-family: 'DM Sans', sans-serif; background: var(--em-paper); }
+.v-application__wrap { min-height: 100vh; }
+.app-background { background: var(--em-paper); min-height: 100vh; }
+.content-width { max-width: 1510px; margin: 0 auto; }
+.v-main .v-container { padding-top: 32px !important; padding-bottom: 72px !important; }
+
+/* Navigation */
+.brand-drawer { background: var(--em-forest-dark) !important; color: #f8f6ef !important; border: 0 !important; }
+.brand-lockup { min-height: 91px; color: #fbfaf7; }
+.brand-lockup .text-caption { color: #bbcec0; letter-spacing: .04em; }
+.brand-avatar { border-radius: 10px !important; }
+.drawer-caption { color: #9bb1a2; font-size: 9px; font-weight: 700; letter-spacing: 1.7px; }
+.brand-drawer .v-list { padding: 7px 11px; }
+.brand-drawer .v-list-item { min-height: 46px; margin: 3px 0; color: #d0dbd1; border-radius: 7px !important; font-size: 13px; }
+.brand-drawer .v-list-item--active { color: #fff !important; background: #315d48; }
+.brand-drawer .v-list-item--active .v-icon { color: #efaa83; }
+.brand-drawer .v-list-item__overlay { display: none; }
+.brand-drawer .v-list-item__prepend > .v-icon { opacity: .9; }
+.topbar { background: var(--em-paper) !important; border-color: var(--em-line) !important; }
+.topbar-title { display: flex; flex-direction: column; justify-content: center; color: var(--em-ink); line-height: 1.1; font-family: Manrope, sans-serif; font-size: 17px !important; }
+.topbar-kicker { color: #9a7966; font: 700 8px/1.5 'DM Sans', sans-serif; letter-spacing: 1.6px; }
+.topbar .v-app-bar-nav-icon, .refresh-button { color: var(--em-forest) !important; }
+.v-app-bar { box-shadow: none !important; }
+
+/* Shared surfaces and controls */
+.v-theme--eduMatchLight { color-scheme: light; --v-theme-primary: 33, 77, 59; --v-theme-secondary: 204, 121, 87; --v-theme-background: 251, 250, 247; --v-theme-surface: 255, 255, 255; --v-theme-surface-variant: 238, 241, 232; }
+.v-theme--eduMatchLight .v-card, .v-theme--eduMatchLight .v-field, .v-theme--eduMatchLight .v-input__control { color-scheme: light; }
+.v-card { border-color: var(--em-line) !important; box-shadow: 0 4px 18px rgba(36, 55, 43, .035) !important; }
+.v-card-title, .v-card-text, .v-card-actions { color: var(--em-ink); }
+.v-btn { letter-spacing: .01em; text-transform: none; font-weight: 600; }
+.v-btn--variant-flat.bg-primary, .v-btn--variant-elevated.bg-primary { background: var(--em-forest) !important; }
+.v-btn--variant-tonal.bg-primary { color: var(--em-forest) !important; background: #e8eee7 !important; }
+.v-chip { font-weight: 600; }
+.v-field { border-radius: 6px !important; }
+.v-field--variant-outlined .v-field__outline { color: #dfe2d9; }
+.v-field--focused .v-field__outline { color: var(--em-forest) !important; }
+.v-label, .v-field__input, .v-select__selection-text { font-family: 'DM Sans', sans-serif; }
+.v-alert { border-radius: 8px !important; }
+.page-intro { margin: 6px 0 28px; }
+.page-intro h1 { color: var(--em-forest-dark); font: 700 clamp(30px, 4vw, 43px)/1.12 Manrope, sans-serif; letter-spacing: -1.8px; }
+.page-intro p { color: var(--em-muted) !important; font-size: 14px; }
+.max-search { max-width: 560px; }
+.v-empty-state { border: 1px dashed #dfe4da; border-radius: 10px; background: #fffefa; }
+
+/* Landing page */
+.hero-panel {
+  min-height: 535px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  overflow: hidden;
+  padding: 54px 6% 141px;
+  color: var(--em-ink);
+  border-radius: 4px;
+  background: #eef1e8;
+}
+.hero-copy-block { position: relative; z-index: 1; padding: 5px 0 14px; }
+.eyebrow { display: flex; align-items: center; gap: 9px; color: #64796b; font-size: 9px; font-weight: 700; letter-spacing: 1.65px; }
+.eyebrow > span { width: 7px; height: 7px; display: inline-block; border-radius: 50%; background: var(--em-clay); }
+.hero-panel h1 { margin: 23px 0 21px; color: #203b30; font: 500 clamp(52px, 6.7vw, 82px)/.99 Manrope, sans-serif; letter-spacing: -4.6px; }
+.hero-panel h1 em, .home-section-heading h2 em { color: var(--em-clay); font: 400 1em/1 Georgia, serif; }
+.hero-copy { max-width: 430px; margin: 0; color: #64746a; font-size: 14px; line-height: 1.85; }
+.hero-note { margin-top: 31px; color: #607267; font: italic 12px Georgia, serif; }
+.hero-note span { margin-right: 7px; color: var(--em-clay); font-size: 17px; }
+.hero-art { position: relative; justify-self: end; width: min(100%, 510px); height: 340px; margin: -8px 0 0; }
+.sun-disc { position: absolute; top: 15px; left: 22%; width: 255px; height: 255px; border-radius: 50%; background: #e7bc8d; }
+.art-orbit { position: absolute; border: 1px solid rgba(79, 114, 94, .28); border-radius: 50%; transform: rotate(-27deg); }
+.orbit-one { top: 80px; left: 2%; width: 94%; height: 170px; }
+.orbit-two { top: 56px; left: 10%; width: 82%; height: 235px; transform: rotate(22deg); }
+.arch { position: absolute; bottom: 27px; left: 32%; width: 190px; height: 245px; overflow: hidden; border-radius: 100px 100px 0 0; background: #b77b5f; }
+.arch-window { position: absolute; top: 35px; left: 30px; width: 130px; height: 182px; border: 1px solid rgba(255, 231, 209, .55); border-radius: 75px 75px 0 0; }
+.arch-window::after { position: absolute; left: 50%; width: 1px; height: 100%; content: ''; background: rgba(255, 231, 209, .48); }
+.art-step { position: absolute; bottom: 27px; height: 30px; background: #41664f; }
+.step-back { left: 17%; width: 66%; }
+.step-front { bottom: 0; left: 11%; width: 78%; background: #557a62; }
+.person { position: absolute; bottom: 27px; left: 45%; width: 110px; height: 198px; }
+.person-head { position: absolute; z-index: 2; top: 23px; left: 42px; width: 39px; height: 48px; border-radius: 48%; background: #bd7753; }
+.person-hair { position: absolute; z-index: 3; top: 18px; left: 39px; width: 45px; height: 31px; border-radius: 50% 55% 30% 35%; background: #3d352e; transform: rotate(-12deg); }
+.person-body { position: absolute; top: 70px; left: 25px; width: 78px; height: 92px; border-radius: 34px 34px 8px 8px; background: #eacb9e; transform: rotate(-3deg); }
+.person-arm { position: absolute; z-index: 4; top: 80px; left: 5px; width: 74px; height: 18px; border-radius: 20px; background: #bd7753; transform: rotate(-39deg); }
+.person-leg { position: absolute; bottom: 0; left: 43px; width: 25px; height: 65px; border-radius: 0 0 10px 10px; background: #415b49; transform: rotate(5deg); }
+.book { position: absolute; z-index: 5; top: 47px; left: 0; width: 47px; height: 34px; border: 3px solid #f2dfc4; background: #d07b53; transform: rotate(-20deg); }
+.art-plant { position: absolute; z-index: 1; bottom: 27px; width: 75px; height: 108px; }
+.plant-left { left: 6%; }
+.plant-right { right: 2%; transform: scale(.8); }
+.art-plant b { position: absolute; bottom: 0; left: 29px; width: 22px; height: 42px; border-radius: 4px 4px 11px 11px; background: #bb825f; }
+.art-plant i { position: absolute; bottom: 34px; width: 23px; height: 42px; border-radius: 100% 0; background: #67856b; transform-origin: bottom; }
+.art-plant i:nth-child(1) { left: 12px; transform: rotate(-38deg); }
+.art-plant i:nth-child(2) { left: 31px; transform: rotate(16deg) scale(.9); }
+.art-plant i:nth-child(3) { bottom: 63px; left: 27px; transform: rotate(-13deg) scale(.8); }
+.spark { position: absolute; color: var(--em-clay); }
+.spark-one { top: 24px; right: 10%; font-size: 27px; }
+.spark-two { top: 84px; left: 7%; font-size: 18px; }
+.floating-label { position: absolute; z-index: 2; top: 112px; right: 0; padding: 11px 14px; color: #577060; background: var(--em-paper); box-shadow: 0 8px 24px rgba(51, 72, 50, .08); font: italic 12px/1.4 Georgia, serif; transform: rotate(4deg); }
+.hero-search-wrap { position: absolute; z-index: 2; right: 6%; bottom: 49px; left: 6%; display: flex; align-items: center; gap: 26px; }
+.hero-search-copy { display: flex; min-width: 188px; flex-direction: column; gap: 5px; }
+.hero-search-copy span { color: #5c7564; font-size: 9px; font-weight: 700; letter-spacing: 1.3px; }
+.hero-search-copy small { color: #879187; font: italic 11px Georgia, serif; }
+.hero-search-row { flex: 1; margin: 0; }
+.hero-search-row .v-col { padding: 0; }
+.hero-search-row .v-input { background: #fff; box-shadow: 0 8px 25px rgba(38, 60, 45, .08); }
+.hero-search-row .v-field { border-radius: 4px !important; }
+.hero-search-row .v-field__input { min-height: 56px; }
+.hero-search-row .search-button { min-height: 42px; margin-right: 4px; padding: 0 16px; font-size: 11px; }
+.hero-bottom { position: absolute; right: 6%; bottom: 0; left: 6%; display: flex; height: 34px; align-items: center; justify-content: space-between; border-top: 1px solid #dfe3d8; color: #879288; font-size: 8px; letter-spacing: 1.4px; }
+.hero-bottom b { margin-left: 8px; color: var(--em-clay); font-size: 15px; }
+.home-section-heading { display: flex; align-items: end; justify-content: space-between; margin: 52px 0 24px; }
+.eyebrow-muted { color: #8a958c; }
+.home-section-heading h2 { margin: 10px 0 0; color: var(--em-forest-dark); font: 500 47px/1.1 Manrope, sans-serif; letter-spacing: -2.2px; }
+.home-section-heading p { margin: 0 0 9px; color: #78857d; font: italic 14px Georgia, serif; }
+.clickable-card { cursor: pointer; }
+.clickable-card .v-card-text { color: var(--em-muted); }
+.clickable-card .v-avatar { border-radius: 12px !important; }
+.home-section-heading + .v-row .v-card { min-height: 185px; }
+
+/* Catalogue screens */
+.university-banner { position: relative; display: flex; min-height: 132px; align-items: center; overflow: hidden; padding: 24px; background: linear-gradient(120deg, #e9eee5, #f4e9de); }
+.university-banner::after { position: absolute; right: 24px; bottom: -47px; width: 155px; height: 155px; border: 1px solid rgba(33, 77, 59, .18); border-radius: 50%; content: ''; box-shadow: 0 0 0 18px rgba(255,255,255,.13), 0 0 0 38px rgba(255,255,255,.12); }
+.university-banner .v-avatar { z-index: 1; }
+.program-art { min-height: 100px; background: linear-gradient(135deg, #edf1e8, #f3e5d9) !important; }
+.program-art .v-icon { color: var(--em-forest) !important; }
 .program-card, .clickable-card { transition: transform .18s ease, box-shadow .18s ease; }
-.program-card:hover, .clickable-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(24,48,82,.09) !important; }
-.max-search { max-width: 520px; }
+.program-card:hover, .clickable-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(24, 48, 34, .09) !important; }
+.program-card h3 { color: var(--em-forest-dark); }
+.detail-banner { color: #fff; background: radial-gradient(circle at 82% 18%, rgba(205, 126, 89, .3), transparent 24%), linear-gradient(120deg, #183c2e, #315e48); }
+.detail-banner .v-chip { color: #f3d6c5 !important; border-color: #86a08d !important; }
+.metric-label { margin-bottom: 5px; color: #88948b; font-size: .72rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
+.v-card .text-medium-emphasis { color: var(--em-muted) !important; }
+.v-pagination__item--is-active .v-btn { color: white !important; background: var(--em-forest) !important; }
+
+@media (max-width: 960px) {
+  .hero-panel { min-height: 590px; padding-right: 5%; padding-left: 5%; }
+  .hero-panel h1 { font-size: clamp(50px, 7.5vw, 70px); }
+  .hero-art { transform: scale(.88); transform-origin: center right; margin-right: -20px; }
+  .hero-search-wrap, .hero-bottom { right: 5%; left: 5%; }
+  .hero-search-wrap { gap: 16px; }
+  .hero-search-copy { min-width: 145px; }
+}
+@media (max-width: 600px) {
+  .v-main .v-container { padding: 20px 16px 48px !important; }
+  .hero-panel { display: block; min-height: 680px; padding: 40px 23px 155px; }
+  .hero-panel h1 { margin: 18px 0; font-size: clamp(48px, 13vw, 64px); letter-spacing: -3.4px; }
+  .hero-copy { max-width: 340px; font-size: 13px; }
+  .hero-note { margin-top: 19px; font-size: 11px; }
+  .hero-art { position: absolute; top: 286px; right: -3%; width: 100%; height: 290px; transform: scale(.8); transform-origin: top right; }
+  .sun-disc { width: 215px; height: 215px; }
+  .arch { left: 31%; width: 165px; height: 208px; }
+  .arch-window { left: 26px; width: 113px; height: 155px; }
+  .person { left: 44%; transform: scale(.84); transform-origin: bottom left; }
+  .hero-search-wrap { right: 20px; bottom: 43px; left: 20px; display: block; }
+  .hero-search-copy { margin-bottom: 8px; }
+  .hero-search-copy small { display: none; }
+  .hero-search-row .v-field__input { min-height: 52px; }
+  .hero-search-row .search-button { padding: 0 10px; font-size: 0; }
+  .hero-search-row .search-button .v-icon { margin: 0 !important; font-size: 20px; }
+  .hero-bottom { right: 20px; left: 20px; height: 29px; font-size: 7px; }
+  .home-section-heading { display: block; margin: 39px 0 19px; }
+  .home-section-heading h2 { font-size: 39px; }
+  .home-section-heading p { margin-top: 8px; font-size: 12px; }
+  .page-intro { margin-bottom: 20px; }
+  .page-intro h1 { font-size: 31px; }
+  .university-banner { min-height: 105px; }
+  .detail-banner { padding: 24px !important; }
+  .detail-banner h1 { font-size: 30px !important; }
+}
 @media (prefers-reduced-motion: reduce) { .program-card, .clickable-card { transition: none; } }
 </style>
